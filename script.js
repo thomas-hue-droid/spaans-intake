@@ -218,12 +218,36 @@ render();
       version: "v1.3"
     };
 
-    // Store last submission locally for debugging (optional)
-    try {
-      localStorage.setItem("spaans_intake_last_submission", JSON.stringify(payload));
-    } catch (_) {}
+    const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbzDRcO9twI8QuzlVNAqS8YLFzBvfdk4yYEf9mLL_q211o-FS7MFtoY9g8W7ti50sU0/exec";
+    const INTAKE_KEY = "dolfijn-rodeo-Spanje";
 
-    // Redirect to thanks page (GET) — safe on GitHub Pages
-    window.location.href = "thanks/";
+    (async () => {
+      try {
+        const res = await fetch(ENDPOINT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            key: INTAKE_KEY,
+            ts: payload.ts,
+            naam: payload.naam,
+            focus: payload.focus,
+            year_one_liner: payload.year_one_liner,
+            selections: JSON.parse(payload.selections_json || "[]"),
+            meta: JSON.parse(payload.meta_json || "{}"),
+            source: "github-pages"
+          })
+        });
+
+        // Optioneel: check response
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok || out.ok === false) throw new Error(out.error || "submit failed");
+
+        window.location.href = "thanks/";
+      } catch (err) {
+        alert("Oeps: versturen lukte niet. Probeer opnieuw.");
+        console.error(err);
+      }
+    })();
+
   });
 })();
