@@ -1,4 +1,30 @@
 // V1: technical scaffold. Edit only the CONTENT blocks below.
+
+// --- V1.4 storage config (Google Apps Script) ---
+const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbzDRcO9twI8QuzlVNAqS8YLFzBvfdk4yYEf9mLL_q211o-FS7MFtoY9g8W7ti50sU0/exec";
+const INTAKE_KEY = "dolfijn-rodeo-Spanje";
+
+async function sendToSheet(payload) {
+  const outgoing = {
+    key: INTAKE_KEY,
+    ts: payload.ts,
+    naam: payload.naam,
+    focus: payload.focus,
+    year_one_liner: payload.year_one_liner,
+    selections: JSON.parse(payload.selections_json || "[]"),
+    meta: JSON.parse(payload.meta_json || "{}"),
+    source: "github-pages"
+  };
+
+  // Use no-cors to avoid CORS/preflight issues with Apps Script Web Apps.
+  // Response will be opaque; we assume success if the request is sent.
+  await fetch(ENDPOINT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(outgoing)
+  });
+}
+
 // Selections are stored in Netlify Forms via hidden field: selections_json.
 
 const CONTENT = [
@@ -197,12 +223,12 @@ function escapeAttr(str) {
 render();
 
 
-// --- GitHub Pages mode (V1.3): intercept submit to avoid POST/405 ---
+// --- GitHub Pages mode (V1.4): intercept submit, write to Sheets, then redirect ---
 (function attachSubmitHandler(){
   const formEl = document.getElementById("intakeForm");
   if (!formEl) return;
 
-  formEl.addEventListener("submit", (e) => {
+  formEl.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     // Ensure hidden fields are up to date
@@ -215,39 +241,21 @@ render();
       selections_json: document.getElementById("selections_json")?.value || "[]",
       meta_json: document.getElementById("meta_json")?.value || "{}",
       ts: new Date().toISOString(),
-      version: "v1.3"
+      version: "v1.4"
     };
 
-    const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbzDRcO9twI8QuzlVNAqS8YLFzBvfdk4yYEf9mLL_q211o-FS7MFtoY9g8W7ti50sU0/exec";
-    const INTAKE_KEY = "dolfijn-rodeo-Spanje";
+    // Optional: keep local copy for debugging
+    try {
+      localStorage.setItem("spaans_intake_last_submission", JSON.stringify(payload));
+    } catch (_) {}
 
-    (async () => {
-      try {
-        const res = await fetch(ENDPOINT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            key: INTAKE_KEY,
-            ts: payload.ts,
-            naam: payload.naam,
-            focus: payload.focus,
-            year_one_liner: payload.year_one_liner,
-            selections: JSON.parse(payload.selections_json || "[]"),
-            meta: JSON.parse(payload.meta_json || "{}"),
-            source: "github-pages"
-          })
-        });
-
-        // Optioneel: check response
-        const out = await res.json().catch(() => ({}));
-        if (!res.ok || out.ok === false) throw new Error(out.error || "submit failed");
-
-        window.location.href = "thanks/";
-      } catch (err) {
-        alert("Oeps: versturen lukte niet. Probeer opnieuw.");
-        console.error(err);
-      }
-    })();
-
+    try {
+      await sendToSheet(payload);
+      window.location.href = "thanks/";
+    } catch (err) {
+      // Most likely offline or request blocked
+      alert("Versturen lukte niet (mogelijk offline). Probeer opnieuw.");
+      console.error(err);
+    }
   });
 })();
