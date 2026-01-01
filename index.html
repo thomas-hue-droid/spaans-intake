@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Lessen Spaans – intake / wensen (V1)" />
+  <title>Lessen Spaans – wensen (V1)</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="pill">Lessen Spaans · Intake (V1)</div>
+      <h1>Help mij de lessen zo te maken dat ze voor jou werken.</h1>
+      <p class="sub">
+        Klik op kaarten, voeg (optioneel) korte toelichting toe, en verstuur.
+        Geen account nodig.
+      </p>
+    </header>
+
+    <!-- Netlify Forms: submissions appear in Netlify dashboard (no paid plan required for basic use). -->
+    <form name="spaans-intake-v1" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" class="card form" action="/thanks">
+      <input type="hidden" name="form-name" value="spaans-intake-v1" />
+      <p class="hidden">
+        <label>Laat dit leeg: <input name="bot-field" /></label>
+      </p>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Basis</h2>
+          <p class="hint">Alleen om antwoorden te kunnen herkennen (mag ook leeg).</p>
+        </div>
+
+        <div class="grid two">
+          <label class="field">
+            <span>Naam (optioneel)</span>
+            <input type="text" name="naam" autocomplete="name" placeholder="bijv. Marieke" />
+          </label>
+
+          <label class="field">
+            <span>Waar wil je vooral op focussen? (optioneel)</span>
+            <input type="text" name="focus" placeholder="bijv. meer spreken, beter luisteren, grammatica..." />
+          </label>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Keuzekaarten</h2>
+          <p class="hint">V1 is technisch: inhoud pas je straks zelf aan in <code>script.js</code>.</p>
+        </div>
+
+        <div id="blocks"></div>
+
+        <!-- Hidden payloads we populate with JS -->
+        <input type="hidden" name="selections_json" id="selections_json" />
+        <input type="hidden" name="meta_json" id="meta_json" />
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Jouw jaar in één zin</h2>
+          <p class="hint">Korte vrije tekst (optioneel).</p>
+        </div>
+        <label class="field">
+          <textarea name="year_one_liner" rows="3" placeholder="Als deze cursus geslaagd is, dan..."></textarea>
+        </label>
+      </section>
+
+      <footer class="footer">
+        <div class="fineprint">
+          <span class="dot"></span>
+          <span>Je antwoorden worden alleen gebruikt om de lessen te verbeteren.</span>
+        </div>
+        <button type="submit" class="btn" id="submitBtn">Verstuur</button>
+      </footer>
+
+      <!-- Optional redirect after submit -->
+</form>
+
+    <section class="tips">
+      <details>
+        <summary>Technisch: waar komen de antwoorden terecht?</summary>
+        <div class="details">
+          <p>
+            Dit formulier gebruikt <strong>Netlify Forms</strong>. Submissies worden automatisch opgeslagen in je Netlify-site.
+            Je ziet ze in: <em>Site dashboard → Forms</em>.
+          </p>
+          <ul>
+            <li>Je cursisten hoeven nergens in te loggen.</li>
+            <li>Jij hoeft geen betaalde Netlify-account te hebben voor basis-opslag.</li>
+            <li>Je kunt later koppelen naar e-mail/Sheets via integraties, maar dat is niet nodig voor V1.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>
