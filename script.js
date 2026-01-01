@@ -195,3 +195,35 @@ function escapeAttr(str) {
 }
 
 render();
+
+
+// --- GitHub Pages mode (V1.3): intercept submit to avoid POST/405 ---
+(function attachSubmitHandler(){
+  const formEl = document.getElementById("intakeForm");
+  if (!formEl) return;
+
+  formEl.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Ensure hidden fields are up to date
+    try { syncHiddenFields(); } catch (_) {}
+
+    const payload = {
+      naam: formEl.querySelector('input[name="naam"]')?.value || "",
+      focus: formEl.querySelector('input[name="focus"]')?.value || "",
+      year_one_liner: formEl.querySelector('textarea[name="year_one_liner"]')?.value || "",
+      selections_json: document.getElementById("selections_json")?.value || "[]",
+      meta_json: document.getElementById("meta_json")?.value || "{}",
+      ts: new Date().toISOString(),
+      version: "v1.3"
+    };
+
+    // Store last submission locally for debugging (optional)
+    try {
+      localStorage.setItem("spaans_intake_last_submission", JSON.stringify(payload));
+    } catch (_) {}
+
+    // Redirect to thanks page (GET) — safe on GitHub Pages
+    window.location.href = "thanks/";
+  });
+})();
