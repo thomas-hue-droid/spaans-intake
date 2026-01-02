@@ -115,7 +115,10 @@ function render() {
       const noteValue = isSelected ? (state.selected.get(item.id).note || "") : "";
 
       card.innerHTML = `
-<div class="top">
+<svg class="outline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="1" y="1" width="98" height="98" rx="16" ry="16"></rect>
+        </svg>
+        <div class="top">
           <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
           <div>
             <div class="label">${escapeHtml(item.label)}</div>
@@ -137,13 +140,24 @@ card.addEventListener("click", (e) => {
 
         // Update classes on this card only
         if (nowSelected) {
+          // Prep SVG outline to draw from start
+          try {
+            const rect = card.querySelector(".outline rect");
+            if (rect) {
+              const total = parseFloat(getComputedStyle(card).getPropertyValue("--dash")) || rect.getTotalLength();
+              rect.style.strokeDashoffset = String(total);
+              // force layout so animation restarts reliably
+              void rect.getBoundingClientRect();
+            }
+          } catch (_) {}
+
           card.classList.add("selected");
           card.classList.add("just-selected");
           // ensure textarea gets focus when selecting
           const ta = card.querySelector(".note");
           if (ta) setTimeout(() => ta.focus({ preventScroll: true }), 0);
           // remove just-selected after animation so it won't replay
-          card.addEventListener("animationend", () => card.classList.remove("just-selected"), { once: true });
+                    setTimeout(() => card.classList.remove("just-selected"), 450);
         } else {
           card.classList.remove("selected");
           card.classList.remove("just-selected");

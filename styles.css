@@ -121,7 +121,7 @@ input:focus, textarea:focus{border-color:rgba(125,211,252,.55); box-shadow:0 0 0
   gap:10px;
   padding:14px;
   border-radius:16px;
-  border:1px solid transparent;background: rgba(0,0,0,.10);
+  border:1px solid var(--stroke);background: rgba(0,0,0,.10);
   cursor:pointer;
   user-select:none;
   transition: transform .08s ease, border-color .12s ease, background .12s ease;
@@ -197,43 +197,7 @@ to   { stroke-dashoffset: 0; }
 }
 
 
-/* Border transition: thin gray -> thin neon blue, drawn clockwise from top-left */
-.choice{
-  position:relative;
-}
-.choice::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:16px;
-  pointer-events:none;
-  /* Base border (thin gray) */
-  box-shadow: inset 0 0 0 1px var(--stroke);
-}
-
-/* Blue border path: draw with clip-path sweep */
-.choice::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:16px;
-  pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(125,211,252,.95);
-  opacity:0;
-  /* Start with nothing visible */
-  clip-path: polygon(0 0, 0 0, 0 0, 0 0);
-}
-.choice.selected::before{
-  opacity:1;
-}
-
-.choice.just-selected::before{
-  opacity:1;
-  animation: borderSweep 450ms cubic-bezier(.2,.85,.2,1) forwards;
-}
-@keyframes borderSweep{
-  0%   { clip-path: polygon(0 0, 0 0, 0 0, 0 0); }
-  25%  { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }          /* top */
+25%  { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }          /* top */
   50%  { clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%); } /* right */
   75%  { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }    /* bottom */
   100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }    /* left completes via inset ring */
@@ -241,11 +205,6 @@ to   { stroke-dashoffset: 0; }
 
 
 /* Perf: avoid repaint storms */
-.choice::before{ will-change: clip-path; }
-.choice.just-selected::before{ will-change: clip-path; }
-
-.choice.selected::after{ box-shadow: inset 0 0 0 0 rgba(0,0,0,0); }
-
 .choice .tag{ display:none !important; }
 
 
@@ -287,4 +246,42 @@ to   { stroke-dashoffset: 0; }
 .inline textarea:focus{
   border-color:rgba(125,211,252,.55);
   box-shadow:0 0 0 3px rgba(125,211,252,.15);
+}
+
+
+/* SVG outline: animate thin gray border -> thin neon blue border (single line) */
+.choice{
+  position:relative;
+}
+.choice.selected{
+  border-color: transparent; /* prevent double border */
+}
+.choice .outline{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+.choice .outline rect{
+  fill:none;
+  stroke: rgba(125,211,252,.95); /* the animation color */
+  stroke-width:1;               /* match thin border */
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  opacity:0;
+  stroke-dasharray: var(--dash, 0);
+  stroke-dashoffset: var(--dash, 0);
+}
+.choice.selected .outline rect{
+  opacity:1;
+  stroke-dashoffset: 0;         /* final color matches animation color */
+}
+.choice.just-selected .outline rect{
+  opacity:1;
+  animation: drawOutline 420ms cubic-bezier(.2,.85,.2,1) forwards;
+}
+@keyframes drawOutline{
+  from { stroke-dashoffset: var(--dash, 0); }
+  to   { stroke-dashoffset: 0; }
 }
