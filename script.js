@@ -116,7 +116,7 @@ function render() {
 
       card.innerHTML = `
 <svg class="outline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <rect x="1" y="1" width="98" height="98" rx="16" ry="16"></rect>
+          <rect x="1.5" y="1.5" width="97" height="97" rx="16" ry="16"></rect>
         </svg>
         <div class="top">
           <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
@@ -145,13 +145,16 @@ card.addEventListener("click", (e) => {
             const rect = card.querySelector(".outline rect");
             if (rect) {
               const total = parseFloat(getComputedStyle(card).getPropertyValue("--dash")) || rect.getTotalLength();
+              rect.style.strokeDasharray = String(total);
               rect.style.strokeDashoffset = String(total);
-              // force layout so animation restarts reliably
               void rect.getBoundingClientRect();
             }
           } catch (_) {}
 
           card.classList.add("selected");
+          // Restart outline animation reliably
+          card.classList.remove("just-selected");
+          void card.offsetWidth;
           card.classList.add("just-selected");
           // ensure textarea gets focus when selecting
           const ta = card.querySelector(".note");

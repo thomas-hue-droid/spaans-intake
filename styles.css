@@ -256,17 +256,26 @@ to   { stroke-dashoffset: 0; }
 .choice.selected{
   border-color: transparent; /* prevent double border */
 }
+/* SVG outline: animate thin gray border -> thin neon blue border (single line) */
+.choice{
+  position:relative;
+}
+.choice.selected{
+  border-color: transparent; /* prevent double border */
+}
 .choice .outline{
   position:absolute;
   inset:0;
   width:100%;
   height:100%;
   pointer-events:none;
+  overflow:visible;
 }
 .choice .outline rect{
   fill:none;
-  stroke: rgba(125,211,252,.95); /* the animation color */
-  stroke-width:1;               /* match thin border */
+  stroke: rgba(125,211,252,.95); /* animation + final color */
+  stroke-width:1.5;             /* thin but visible */
+  vector-effect: non-scaling-stroke;
   stroke-linecap:round;
   stroke-linejoin:round;
   opacity:0;
@@ -275,7 +284,7 @@ to   { stroke-dashoffset: 0; }
 }
 .choice.selected .outline rect{
   opacity:1;
-  stroke-dashoffset: 0;         /* final color matches animation color */
+  stroke-dashoffset: 0;         /* final matches animation */
 }
 .choice.just-selected .outline rect{
   opacity:1;
@@ -284,4 +293,6 @@ to   { stroke-dashoffset: 0; }
 @keyframes drawOutline{
   from { stroke-dashoffset: var(--dash, 0); }
   to   { stroke-dashoffset: 0; }
+}
+to   { stroke-dashoffset: 0; }
 }
