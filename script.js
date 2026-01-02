@@ -111,7 +111,6 @@ function render() {
 
       const isSelected = state.selected.has(item.id);
       if (isSelected) card.classList.add("selected");
-      if (isSelected && state.lastToggledItemId === item.id) card.classList.add("just-selected");
 
       const noteValue = isSelected ? (state.selected.get(item.id).note || "") : "";
 
@@ -129,14 +128,32 @@ function render() {
         </div>
       `;
 card.addEventListener("click", (e) => {
-        // If click originated inside input, don't toggle
+        // If click originated inside textarea, don't toggle
         if (e.target && e.target.classList && e.target.classList.contains("note")) return;
 
-        toggleItem(block, item);
-        render();
+        const changed = toggleItem(block, item);
+        if (!changed) return;
+
+        const nowSelected = state.selected.has(item.id);
+
+        // Update classes on this card only
+        if (nowSelected) {
+          card.classList.add("selected");
+          card.classList.add("just-selected");
+          // ensure textarea gets focus when selecting
+          const ta = card.querySelector(".note");
+          if (ta) setTimeout(() => ta.focus({ preventScroll: true }), 0);
+          // remove just-selected after animation so it won't replay
+          card.addEventListener("animationend", () => card.classList.remove("just-selected"), { once: true });
+        } else {
+          card.classList.remove("selected");
+          card.classList.remove("just-selected");
+          // clear textarea UI (keep state already removed)
+          const ta = card.querySelector(".note");
+          if (ta) ta.value = "";
+        }
+
         syncHiddenFields();
-        // Prevent re-animating previously selected cards on next re-render
-        setTimeout(() => { state.lastToggledItemId = null; }, 0);
       });
 
       // Note textarea updates state
@@ -159,20 +176,23 @@ cards.appendChild(card);
 
 function toggleItem(block, item) {
   state.lastToggledItemId = item.id;
-  // Max-per-block logic (optional)
+
+  // Select
   if (!state.selected.has(item.id)) {
     if (Number.isFinite(block.max) && block.max !== null) {
       const selectedInBlock = [...state.selected.values()].filter(v => v.blockId === block.id).length;
       if (selectedInBlock >= block.max) {
-        // Simple feedback: briefly disable button text
         flashButton(`Max ${block.max} in “${block.title}”`);
-        return;
+        return false;
       }
     }
     state.selected.set(item.id, { blockId: block.id, note: "" });
-  } else {
-    state.selected.delete(item.id);
+    return true;
   }
+
+  // Deselect
+  state.selected.delete(item.id);
+  return true;
 }
 
 let flashTimeout = null;
