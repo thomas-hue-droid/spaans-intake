@@ -25,6 +25,39 @@ async function sendToSheet(payload) {
   });
 }
 
+
+function animateOutline(card){
+  try{
+    const rect = card.querySelector(".outline rect");
+    if(!rect) return;
+
+    // Cancel any previous animations on this rect
+    rect.getAnimations().forEach(a => a.cancel());
+
+    // Ensure we measure after layout
+    const total = rect.getTotalLength();
+    rect.style.strokeDasharray = String(total);
+    rect.style.strokeDashoffset = String(total);
+
+    // Animate clockwise reveal (dashoffset: total -> 0)
+    rect.animate(
+      [{ strokeDashoffset: total }, { strokeDashoffset: 0 }],
+      { duration: 420, easing: "cubic-bezier(.2,.85,.2,1)", fill: "forwards" }
+    );
+  } catch(_){}
+}
+
+function resetOutline(card){
+  try{
+    const rect = card.querySelector(".outline rect");
+    if(!rect) return;
+    rect.getAnimations().forEach(a => a.cancel());
+    rect.style.strokeDasharray = "";
+    rect.style.strokeDashoffset = "";
+  } catch(_){}
+}
+
+
 // Selections are stored in Netlify Forms via hidden field: selections_json.
 
 const CONTENT = [
@@ -152,18 +185,14 @@ card.addEventListener("click", (e) => {
           } catch (_) {}
 
           card.classList.add("selected");
-          // Restart outline animation reliably
-          card.classList.remove("just-selected");
-          void card.offsetWidth;
-          card.classList.add("just-selected");
+          requestAnimationFrame(() => animateOutline(card));
           // ensure textarea gets focus when selecting
           const ta = card.querySelector(".note");
           if (ta) setTimeout(() => ta.focus({ preventScroll: true }), 0);
           // remove just-selected after animation so it won't replay
-                    setTimeout(() => card.classList.remove("just-selected"), 450);
-        } else {
+} else {
           card.classList.remove("selected");
-          card.classList.remove("just-selected");
+          resetOutline(card);
           // clear textarea UI (keep state already removed)
           const ta = card.querySelector(".note");
           if (ta) ta.value = "";
