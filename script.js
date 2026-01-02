@@ -114,10 +114,7 @@ function render() {
       const noteValue = isSelected ? (state.selected.get(item.id).note || "") : "";
 
       card.innerHTML = `
-        <svg class="outline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <rect x="1.5" y="1.5" width="97" height="97" rx="16" ry="16"></rect>
-        </svg>
-        <div class="tag">Gekozen</div>
+<div class="tag">Gekozen</div>
         <div class="top">
           <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
           <div>
@@ -146,19 +143,7 @@ card.addEventListener("click", (e) => {
         state.selected.get(item.id).note = e.target.value;
         syncHiddenFields();
       });
-
-      // Set stroke-dash for outline based on perimeter (viewBox 100x100, rect 97x97 with rx=16)
-      try {
-        const rect = card.querySelector(".outline rect");
-        if (rect) {
-          const total = rect.getTotalLength();
-          card.style.setProperty("--dash", String(total));
-          rect.style.strokeDasharray = String(total);
-          rect.style.strokeDashoffset = isSelected ? "0" : String(total);
-        }
-      } catch (_) {}
-
-      cards.appendChild(card);
+cards.appendChild(card);
 }
 
     blockWrap.appendChild(cards);
