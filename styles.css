@@ -270,7 +270,7 @@ to   { stroke-dashoffset: 0; }
 .choice .outline rect{
   fill:none;
   stroke: rgba(125,211,252,.95);
-  stroke-width:1.25;
+  stroke-width:1;
   vector-effect: non-scaling-stroke;
   stroke-linecap:round;
   stroke-linejoin:round;
@@ -279,3 +279,6 @@ to   { stroke-dashoffset: 0; }
 .choice.selected .outline rect{
   opacity:1;
 }
+
+.choice .outline{ z-index: 1; }
+.choice > *{ position: relative; z-index: 2; }

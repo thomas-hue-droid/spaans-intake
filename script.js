@@ -28,16 +28,22 @@ async function sendToSheet(payload) {
 
 function animateOutline(card){
   try{
+    syncOutlineGeometry(card);
+
     const rect = card.querySelector(".outline rect");
     if(!rect) return;
 
     // Cancel any previous animations on this rect
     rect.getAnimations().forEach(a => a.cancel());
 
-    // Ensure we measure after layout
     const total = rect.getTotalLength();
+
+    // Make sure we draw the full perimeter (one complete loop)
     rect.style.strokeDasharray = String(total);
     rect.style.strokeDashoffset = String(total);
+
+    // Force layout so the start state is applied
+    void rect.getBoundingClientRect();
 
     // Animate clockwise reveal (dashoffset: total -> 0)
     rect.animate(
@@ -47,7 +53,7 @@ function animateOutline(card){
   } catch(_){}
 }
 
-function resetOutline(card){
+function resetOutline(card){(card){
   try{
     const rect = card.querySelector(".outline rect");
     if(!rect) return;
@@ -55,6 +61,34 @@ function resetOutline(card){
     rect.style.strokeDasharray = "";
     rect.style.strokeDashoffset = "";
   } catch(_){}
+
+
+function syncOutlineGeometry(card){
+  const svg = card.querySelector(".outline");
+  const rect = svg?.querySelector("rect");
+  if(!svg || !rect) return;
+
+  // Match the card's pixel geometry exactly
+  const w = Math.max(0, Math.round(card.clientWidth));
+  const h = Math.max(0, Math.round(card.clientHeight));
+
+  // Read border-radius from CSS (we use a single value like 16px)
+  const br = getComputedStyle(card).borderRadius || "0px";
+  // Take first radius value (supports "16px 16px ..." too)
+  const r = Math.max(0, parseFloat(br.split(" ")[0]) || 0);
+
+  // Use a viewBox in pixels to avoid scaling artifacts; stroke sits on the 0.5px inset
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svg.setAttribute("preserveAspectRatio", "none");
+
+  rect.setAttribute("x", "0.5");
+  rect.setAttribute("y", "0.5");
+  rect.setAttribute("width", String(Math.max(0, w - 1)));
+  rect.setAttribute("height", String(Math.max(0, h - 1)));
+  rect.setAttribute("rx", String(r));
+  rect.setAttribute("ry", String(r));
+}
+
 }
 
 
@@ -148,9 +182,7 @@ function render() {
       const noteValue = isSelected ? (state.selected.get(item.id).note || "") : "";
 
       card.innerHTML = `
-<svg class="outline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <rect x="1.5" y="1.5" width="97" height="97" rx="16" ry="16"></rect>
-        </svg>
+<svg class="outline" aria-hidden="true"><rect></rect></svg>
         <div class="top">
           <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
           <div>
@@ -327,3 +359,10 @@ render();
     }
   });
 })();
+
+// Keep outlines aligned after viewport resize (cards change size)
+window.addEventListener("resize", () => {
+  document.querySelectorAll(".choice").forEach(c => {
+    try{ syncOutlineGeometry(c); }catch(_){}
+  });
+});
