@@ -115,8 +115,7 @@ function render() {
       const noteValue = isSelected ? (state.selected.get(item.id).note || "") : "";
 
       card.innerHTML = `
-<div class="tag">Gekozen</div>
-        <div class="top">
+<div class="top">
           <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
           <div>
             <div class="label">${escapeHtml(item.label)}</div>

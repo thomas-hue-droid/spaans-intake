@@ -125,7 +125,7 @@ input:focus, textarea:focus{border-color:rgba(125,211,252,.55); box-shadow:0 0 0
   cursor:pointer;
   user-select:none;
   transition: transform .08s ease, border-color .12s ease, background .12s ease;
-  min-height:140px;
+  min-height:150px;
 }
 .choice:hover{transform:translateY(-1px); border-color:var(--stroke2);}
 .choice .top{display:flex; gap:10px; align-items:flex-start;}
@@ -193,32 +193,6 @@ summary{cursor:pointer; font-weight:650; color:rgba(233,238,246,.88);}
 /* (removed flip in v1.5.1) */
 
 /* Back side textarea */
-/* Expanded note area (shows when selected) */
-.inline{
-  display:none;
-  margin-top:10px;
-  gap:8px;
-}
-.choice.selected .inline{display:grid;}
-.inline textarea{
-  width:100%;
-  resize:vertical;
-  min-height:110px;
-  max-height:240px;
-  padding:10px 10px;
-  border-radius:12px;
-  font-size:13px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.18);
-  color:var(--text);
-  outline:none;
-}
-.inline textarea:focus{
-  border-color:rgba(125,211,252,.55);
-  box-shadow:0 0 0 3px rgba(125,211,252,.15);
-}
-
-
 to   { stroke-dashoffset: 0; }
 }
 
@@ -269,3 +243,48 @@ to   { stroke-dashoffset: 0; }
 /* Perf: avoid repaint storms */
 .choice::before{ will-change: clip-path; }
 .choice.just-selected::before{ will-change: clip-path; }
+
+.choice.selected::after{ box-shadow: inset 0 0 0 0 rgba(0,0,0,0); }
+
+.choice .tag{ display:none !important; }
+
+
+/* Unfold animation for the note area */
+.choice{
+  transition: transform .08s ease, border-color .12s ease, background .12s ease;
+}
+.inline{
+  display:grid;            /* keep in flow for smooth height */
+  overflow:hidden;
+  max-height:0;
+  opacity:0;
+  transform: translateY(-4px);
+  transition: max-height 260ms cubic-bezier(.2,.85,.2,1),
+              opacity 160ms ease,
+              transform 220ms ease;
+  margin-top:10px;
+}
+.choice.selected .inline{
+  max-height:260px;        /* enough for textarea + margin */
+  opacity:1;
+  transform: translateY(0);
+}
+
+/* textarea inside */
+.inline textarea{
+  width:100%;
+  resize:vertical;
+  min-height:110px;
+  max-height:240px;
+  padding:10px 10px;
+  border-radius:12px;
+  font-size:13px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.18);
+  color:var(--text);
+  outline:none;
+}
+.inline textarea:focus{
+  border-color:rgba(125,211,252,.55);
+  box-shadow:0 0 0 3px rgba(125,211,252,.15);
+}
