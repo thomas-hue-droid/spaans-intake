@@ -79,6 +79,7 @@ const submitBtn = document.getElementById("submitBtn");
 
 const state = {
   selected: new Map(), // key: itemId, value: { blockId, note }
+  lastToggledItemId: null,
 };
 
 // Render
@@ -110,6 +111,7 @@ function render() {
 
       const isSelected = state.selected.has(item.id);
       if (isSelected) card.classList.add("selected");
+      if (isSelected && state.lastToggledItemId === item.id) card.classList.add("just-selected");
 
       const noteValue = isSelected ? (state.selected.get(item.id).note || "") : "";
 
@@ -133,6 +135,8 @@ card.addEventListener("click", (e) => {
         toggleItem(block, item);
         render();
         syncHiddenFields();
+        // Prevent re-animating previously selected cards on next re-render
+        setTimeout(() => { state.lastToggledItemId = null; }, 0);
       });
 
       // Note textarea updates state
@@ -154,6 +158,7 @@ cards.appendChild(card);
 }
 
 function toggleItem(block, item) {
+  state.lastToggledItemId = item.id;
   // Max-per-block logic (optional)
   if (!state.selected.has(item.id)) {
     if (Number.isFinite(block.max) && block.max !== null) {
