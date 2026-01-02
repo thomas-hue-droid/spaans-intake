@@ -114,21 +114,19 @@ function render() {
       const noteValue = isSelected ? (state.selected.get(item.id).note || "") : "";
 
       card.innerHTML = `
+        <svg class="outline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="97" height="97" rx="16" ry="16"></rect>
+        </svg>
         <div class="tag">Gekozen</div>
-        <div class="inner">
-          <div class="face front">
-            <div class="top">
-              <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
-              <div>
-                <div class="label">${escapeHtml(item.label)}</div>
-                <div class="desc">${escapeHtml(item.desc || "")}</div>
-              </div>
-            </div>
+        <div class="top">
+          <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
+          <div>
+            <div class="label">${escapeHtml(item.label)}</div>
+            <div class="desc">${escapeHtml(item.desc || "")}</div>
           </div>
-          <div class="face back">
-            <div class="backhint">(optioneel) Toelichting — meerdere regels</div>
-            <textarea class="note" rows="4" placeholder="Schrijf hier je toelichting...">${escapeHtml(noteValue)}</textarea>
-          </div>
+        </div>
+        <div class="inline">
+          <textarea class="note" rows="4" placeholder="(optioneel) toelichting...">${escapeHtml(noteValue)}</textarea>
         </div>
       `;
 card.addEventListener("click", (e) => {
@@ -148,6 +146,17 @@ card.addEventListener("click", (e) => {
         state.selected.get(item.id).note = e.target.value;
         syncHiddenFields();
       });
+
+      // Set stroke-dash for outline based on perimeter (viewBox 100x100, rect 97x97 with rx=16)
+      try {
+        const rect = card.querySelector(".outline rect");
+        if (rect) {
+          const total = rect.getTotalLength();
+          card.style.setProperty("--dash", String(total));
+          rect.style.strokeDasharray = String(total);
+          rect.style.strokeDashoffset = isSelected ? "0" : String(total);
+        }
+      } catch (_) {}
 
       cards.appendChild(card);
 }
@@ -208,7 +217,7 @@ function syncHiddenFields() {
   selectionsJsonEl.value = JSON.stringify(selections);
 
   const meta = {
-    version: "v1.5",
+    version: "v1.5.1",
     ts_iso: new Date().toISOString(),
     user_agent: navigator.userAgent
   };
@@ -245,7 +254,7 @@ render();
       selections_json: document.getElementById("selections_json")?.value || "[]",
       meta_json: document.getElementById("meta_json")?.value || "{}",
       ts: new Date().toISOString(),
-      version: "v1.5"
+      version: "v1.5.1"
     };
 
     // Optional: keep local copy for debugging
