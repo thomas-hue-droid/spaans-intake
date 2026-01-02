@@ -115,19 +115,23 @@ function render() {
 
       card.innerHTML = `
         <div class="tag">Gekozen</div>
-        <div class="top">
-          <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
-          <div>
-            <div class="label">${escapeHtml(item.label)}</div>
-            <div class="desc">${escapeHtml(item.desc || "")}</div>
+        <div class="inner">
+          <div class="face front">
+            <div class="top">
+              <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
+              <div>
+                <div class="label">${escapeHtml(item.label)}</div>
+                <div class="desc">${escapeHtml(item.desc || "")}</div>
+              </div>
+            </div>
+          </div>
+          <div class="face back">
+            <div class="backhint">(optioneel) Toelichting — meerdere regels</div>
+            <textarea class="note" rows="4" placeholder="Schrijf hier je toelichting...">${escapeHtml(noteValue)}</textarea>
           </div>
         </div>
-        <div class="inline">
-          <input type="text" class="note" placeholder="(optioneel) toelichting..." value="${escapeAttr(noteValue)}" />
-        </div>
       `;
-
-      card.addEventListener("click", (e) => {
+card.addEventListener("click", (e) => {
         // If click originated inside input, don't toggle
         if (e.target && e.target.classList && e.target.classList.contains("note")) return;
 
@@ -136,7 +140,7 @@ function render() {
         syncHiddenFields();
       });
 
-      // Note input updates state
+      // Note textarea updates state
       const noteInput = card.querySelector(".note");
       noteInput.addEventListener("click", (e) => e.stopPropagation());
       noteInput.addEventListener("input", (e) => {
@@ -146,7 +150,7 @@ function render() {
       });
 
       cards.appendChild(card);
-    }
+}
 
     blockWrap.appendChild(cards);
     blocksEl.appendChild(blockWrap);
@@ -204,7 +208,7 @@ function syncHiddenFields() {
   selectionsJsonEl.value = JSON.stringify(selections);
 
   const meta = {
-    version: "v1",
+    version: "v1.5",
     ts_iso: new Date().toISOString(),
     user_agent: navigator.userAgent
   };
@@ -241,7 +245,7 @@ render();
       selections_json: document.getElementById("selections_json")?.value || "[]",
       meta_json: document.getElementById("meta_json")?.value || "{}",
       ts: new Date().toISOString(),
-      version: "v1.4"
+      version: "v1.5"
     };
 
     // Optional: keep local copy for debugging
