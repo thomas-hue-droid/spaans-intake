@@ -53,7 +53,7 @@ function animateOutline(card){
   } catch(_){}
 }
 
-function resetOutline(card){(card){
+function resetOutline(card){
   try{
     const rect = card.querySelector(".outline rect");
     if(!rect) return;
@@ -61,9 +61,10 @@ function resetOutline(card){(card){
     rect.style.strokeDasharray = "";
     rect.style.strokeDashoffset = "";
   } catch(_){}
-
+}
 
 function syncOutlineGeometry(card){
+(card){
   const svg = card.querySelector(".outline");
   const rect = svg?.querySelector("rect");
   if(!svg || !rect) return;
