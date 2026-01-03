@@ -226,7 +226,7 @@ function syncHiddenFields() {
   selectionsJsonEl.value = JSON.stringify(selections);
 
   const meta = {
-    version: "v1.6",
+    version: "v1.6.1",
     ts_iso: new Date().toISOString(),
     user_agent: navigator.userAgent
   };
@@ -290,7 +290,7 @@ function initGoalBuilder(){
       selections_json: document.getElementById("selections_json")?.value || "[]",
       meta_json: document.getElementById("meta_json")?.value || "{}",
       ts: new Date().toISOString(),
-      version: "v1.6"
+      version: "v1.6.1"
     };
 
     // Optional: keep local copy for debugging
