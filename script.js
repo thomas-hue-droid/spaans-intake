@@ -25,74 +25,6 @@ async function sendToSheet(payload) {
   });
 }
 
-
-function animateOutline(card){
-  try{
-    syncOutlineGeometry(card);
-
-    const rect = card.querySelector(".outline rect");
-    if(!rect) return;
-
-    // Cancel any previous animations on this rect
-    rect.getAnimations().forEach(a => a.cancel());
-
-    const total = rect.getTotalLength();
-
-    // Make sure we draw the full perimeter (one complete loop)
-    rect.style.strokeDasharray = String(total);
-    rect.style.strokeDashoffset = String(total);
-
-    // Force layout so the start state is applied
-    void rect.getBoundingClientRect();
-
-    // Animate clockwise reveal (dashoffset: total -> 0)
-    rect.animate(
-      [{ strokeDashoffset: total }, { strokeDashoffset: 0 }],
-      { duration: 420, easing: "cubic-bezier(.2,.85,.2,1)", fill: "forwards" }
-    );
-  } catch(_){}
-}
-
-function resetOutline(card){
-  try{
-    const rect = card.querySelector(".outline rect");
-    if(!rect) return;
-    rect.getAnimations().forEach(a => a.cancel());
-    rect.style.strokeDasharray = "";
-    rect.style.strokeDashoffset = "";
-  } catch(_){}
-}
-
-function syncOutlineGeometry(card){
-(card){
-  const svg = card.querySelector(".outline");
-  const rect = svg?.querySelector("rect");
-  if(!svg || !rect) return;
-
-  // Match the card's pixel geometry exactly
-  const w = Math.max(0, Math.round(card.clientWidth));
-  const h = Math.max(0, Math.round(card.clientHeight));
-
-  // Read border-radius from CSS (we use a single value like 16px)
-  const br = getComputedStyle(card).borderRadius || "0px";
-  // Take first radius value (supports "16px 16px ..." too)
-  const r = Math.max(0, parseFloat(br.split(" ")[0]) || 0);
-
-  // Use a viewBox in pixels to avoid scaling artifacts; stroke sits on the 0.5px inset
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-  svg.setAttribute("preserveAspectRatio", "none");
-
-  rect.setAttribute("x", "0.5");
-  rect.setAttribute("y", "0.5");
-  rect.setAttribute("width", String(Math.max(0, w - 1)));
-  rect.setAttribute("height", String(Math.max(0, h - 1)));
-  rect.setAttribute("rx", String(r));
-  rect.setAttribute("ry", String(r));
-}
-
-}
-
-
 // Selections are stored in Netlify Forms via hidden field: selections_json.
 
 const CONTENT = [
@@ -183,7 +115,6 @@ function render() {
       const noteValue = isSelected ? (state.selected.get(item.id).note || "") : "";
 
       card.innerHTML = `
-<svg class="outline" aria-hidden="true"><rect></rect></svg>
         <div class="top">
           <div class="emoji">${escapeHtml(item.emoji || "•")}</div>
           <div>
@@ -206,26 +137,16 @@ card.addEventListener("click", (e) => {
 
         // Update classes on this card only
         if (nowSelected) {
-          // Prep SVG outline to draw from start
-          try {
-            const rect = card.querySelector(".outline rect");
-            if (rect) {
-              const total = parseFloat(getComputedStyle(card).getPropertyValue("--dash")) || rect.getTotalLength();
-              rect.style.strokeDasharray = String(total);
-              rect.style.strokeDashoffset = String(total);
-              void rect.getBoundingClientRect();
-            }
-          } catch (_) {}
-
           card.classList.add("selected");
-          requestAnimationFrame(() => animateOutline(card));
+          card.classList.add("just-selected");
           // ensure textarea gets focus when selecting
           const ta = card.querySelector(".note");
           if (ta) setTimeout(() => ta.focus({ preventScroll: true }), 0);
           // remove just-selected after animation so it won't replay
-} else {
+          card.addEventListener("animationend", () => card.classList.remove("just-selected"), { once: true });
+        } else {
           card.classList.remove("selected");
-          resetOutline(card);
+          card.classList.remove("just-selected");
           // clear textarea UI (keep state already removed)
           const ta = card.querySelector(".note");
           if (ta) ta.value = "";
@@ -305,7 +226,7 @@ function syncHiddenFields() {
   selectionsJsonEl.value = JSON.stringify(selections);
 
   const meta = {
-    version: "v1.5.1",
+    version: "v1.5.11",
     ts_iso: new Date().toISOString(),
     user_agent: navigator.userAgent
   };
@@ -342,7 +263,7 @@ render();
       selections_json: document.getElementById("selections_json")?.value || "[]",
       meta_json: document.getElementById("meta_json")?.value || "{}",
       ts: new Date().toISOString(),
-      version: "v1.5.1"
+      version: "v1.5.11"
     };
 
     // Optional: keep local copy for debugging
@@ -360,10 +281,3 @@ render();
     }
   });
 })();
-
-// Keep outlines aligned after viewport resize (cards change size)
-window.addEventListener("resize", () => {
-  document.querySelectorAll(".choice").forEach(c => {
-    try{ syncOutlineGeometry(c); }catch(_){}
-  });
-});
