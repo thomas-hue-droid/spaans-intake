@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="Lessen Spaans – intake / wensen (V1)" />
   <title>Lessen Spaans – wensen (V1)</title>
-  <link rel="stylesheet" href="styles.css?v=1.5.11" />
+  <link rel="stylesheet" href="styles.css?v=1.6" />
 </head>
 <body>
   <main class="wrap">
     <header class="hero">
-      <div class="pill">Lessen Spaans · Intake (V1.5.11)</div>
+      <div class="pill">Lessen Spaans · Intake (V1.6)</div>
       <h1>Help mij de lessen zo te maken dat ze voor jou werken.</h1>
       <p class="sub">
         Klik op kaarten, voeg (optioneel) korte toelichting toe, en verstuur.
@@ -54,7 +54,57 @@
 
       <section class="section">
         <div class="section-head">
-          <h2>Jouw jaar in één zin</h2>
+          
+<section class="card section" id="goalBuilder">
+  <div class="sectionHead">
+    <h2>Jouw Spaans in één mini-scène</h2>
+    <div class="hint">Kies drie bouwstenen en lees je doelzin hardop. Dat alleen al helpt.</div>
+  </div>
+
+  <div class="builder">
+    <div class="builderRow">
+      <label for="gb_where">Waar?</label>
+      <select id="gb_where">
+        <option value="op vakantie in Spanje">op vakantie in Spanje</option>
+        <option value="in een restaurant">in een restaurant</option>
+        <option value="bij de dokter / apotheek">bij de dokter / apotheek</option>
+        <option value="op het station / in OV">op het station / in OV</option>
+        <option value="met Spaanstalige collega’s">met Spaanstalige collega’s</option>
+        <option value="met vrienden / familie">met vrienden / familie</option>
+      </select>
+    </div>
+
+    <div class="builderRow">
+      <label for="gb_action">Wat wil je daar kunnen?</label>
+      <select id="gb_action">
+        <option value="een gesprek beginnen en gaande houden">een gesprek beginnen en gaande houden</option>
+        <option value="vragen stellen en antwoorden begrijpen">vragen stellen en antwoorden begrijpen</option>
+        <option value="iets regelen zonder stress (hotel, reservering, ticket)">iets regelen zonder stress (hotel, reservering, ticket)</option>
+        <option value="een probleem uitleggen (klacht, kapot, ziek)">een probleem uitleggen (klacht, kapot, ziek)</option>
+        <option value="grappen/snacks van de taal mee pakken (sfeer)">grappen/snacks van de taal mee pakken (sfeer)</option>
+      </select>
+    </div>
+
+    <div class="builderRow">
+      <label for="gb_style">Hoe?</label>
+      <select id="gb_style">
+        <option value="liefst vooral pratend, met zachte correctie">liefst vooral pratend, met zachte correctie</option>
+        <option value="met veel luisteren en naspreken (ritme/uitspraak)">met veel luisteren en naspreken (ritme/uitspraak)</option>
+        <option value="met duidelijke grammatica op het juiste moment">met duidelijke grammatica op het juiste moment</option>
+        <option value="met korte schrijfopdrachten om te onthouden">met korte schrijfopdrachten om te onthouden</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="previewBox" aria-live="polite">
+    <div class="previewLabel">Jouw doelzin</div>
+    <div class="previewSentence" id="gb_preview"></div>
+  </div>
+
+  <div class="smallNote">Tip: je hoeft dit niet “perfect” te kiezen. Het is bedoeld om mij richting te geven.</div>
+</section>
+
+  <h2>Jouw jaar in één zin</h2>
           <p class="hint">Korte vrije tekst (optioneel).</p>
         </div>
         <label class="field">
@@ -90,6 +140,6 @@
     </section>
   </main>
 
-  <script src="script.js?v=1.5.11" defer></script>
+  <script src="script.js?v=1.6" defer></script>
 </body>
 </html>

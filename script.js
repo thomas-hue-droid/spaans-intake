@@ -226,7 +226,7 @@ function syncHiddenFields() {
   selectionsJsonEl.value = JSON.stringify(selections);
 
   const meta = {
-    version: "v1.5.11",
+    version: "v1.6",
     ts_iso: new Date().toISOString(),
     user_agent: navigator.userAgent
   };
@@ -243,6 +243,33 @@ function escapeAttr(str) {
 }
 
 render();
+
+
+
+function initGoalBuilder(){
+  const where = document.getElementById("gb_where");
+  const action = document.getElementById("gb_action");
+  const style = document.getElementById("gb_style");
+  const preview = document.getElementById("gb_preview");
+  if(!where || !action || !style || !preview) return;
+
+  function update(){
+    const sentence = `Ik wil ${where.value} ${action.value} — ${style.value}.`;
+    preview.textContent = sentence;
+    // store into meta
+    try{
+      const metaEl = document.getElementById("meta_json");
+      const meta = JSON.parse(metaEl?.value || "{}");
+      meta.goal_builder = { where: where.value, action: action.value, style: style.value, sentence };
+      metaEl.value = JSON.stringify(meta);
+    }catch(_){}
+  }
+
+  where.addEventListener("change", update);
+  action.addEventListener("change", update);
+  style.addEventListener("change", update);
+  update();
+}
 
 
 // --- GitHub Pages mode (V1.4): intercept submit, write to Sheets, then redirect ---
@@ -263,7 +290,7 @@ render();
       selections_json: document.getElementById("selections_json")?.value || "[]",
       meta_json: document.getElementById("meta_json")?.value || "{}",
       ts: new Date().toISOString(),
-      version: "v1.5.11"
+      version: "v1.6"
     };
 
     // Optional: keep local copy for debugging
@@ -281,3 +308,7 @@ render();
     }
   });
 })();
+
+
+// Init goal builder
+try{ initGoalBuilder(); }catch(_){}
