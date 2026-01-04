@@ -109,16 +109,15 @@ const MICRO_HINTS = {
   situations: { title:"Tip", text:"Kies 2–4 situaties. Als je wilt: typ één zin in het grote veld hieronder die je daar graag zou kunnen zeggen." },
   themes: { title:"Tip", text:"Kies thema’s waar je echt over wilt praten. Hoe concreter, hoe beter." },
   skills: { title:"Tip", text:"Licht 1 kaart toe met een voorbeeld: wat wil je straks makkelijker kunnen zeggen?" },
-  painPoints: { title:"Tip", text:"Als je één lastigheid kiest: beschrijf een typisch moment waarop dit gebeurt." },
+  painPoints: { title:"Tip", text:"Als je één ding kiest: beschrijf een typisch moment waarop dit gebeurt." },
   grammar: { title:"Tip", text:"Kies wat je vaker en rustiger uitgelegd wilt krijgen (korte regel + meteen oefenen)." },
-  pronunciation: { title:"Tip", text:"Als je wilt: noteer één woord waarin je vaak twijfelt over uitspraak of klemtoon." },
+  pronunciation: { title:"Tip", text:"Als je wilt: noteer een (aantal) woord(en) waarin je vaak twijfelt over uitspraak of klemtoon." },
   correctionStyle: { title:"Tip", text:"Ik pas mijn correcties hierop aan. Als je twijfelt: ‘Mix’ is altijd oké." },
   inClass: { title:"Tip", text:"Kies 2 werkvormen die jou het meest laten praten zonder stress." },
   homeworkFormats: { title:"Tip", text:"Kies wat haalbaar is in jouw week. 10 minuten die je wél doet > 60 minuten die je laat liggen." },
-  sources: { title:"Tip", text:"Bronnen zijn optioneel. Als je ‘geen’ kiest, hou ik alles binnen de les/huiswerk dat ik zelf maak." },
+  sources: { title:"Tip", text:"Denk terug aan de oefeningen die we hebben gedaan, wat staat je nog bij?" },
   workedWell: { title:"Tip", text:"Als je één ding kiest: wat maakte het precies effectief voor jou?" },
-  change: { title:"Tip", text:"Kies wat het meeste verschil maakt. We kunnen tempo, mix en uitlegstijl echt sturen." },
-};
+  change: { title:"Tip", text:"Kies wat het meeste verschil maakt."
 
 const state = { chips:new Map(), tiles:new Map(), choices:new Map() };
 
