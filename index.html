@@ -2,144 +2,217 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Lessen Spaans – intake / wensen (V1)" />
-  <title>Lessen Spaans – wensen (V1)</title>
-  <link rel="stylesheet" href="styles.css?v=1.6.2" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lessen Spaans · Intake (V2)</title>
+  <meta name="description" content="Intake voor Spaanse lessen — geen account nodig." />
+  <link rel="stylesheet" href="styles.css?v=2.0" />
 </head>
 <body>
-  <main class="wrap">
-    <header class="hero">
-      <div class="pill">Lessen Spaans · Intake (V1.6.2)</div>
+  <header class="topbar">
+    <div class="container">
+      <div class="badge">Lessen Spaans · Intake <span class="muted">(V2)</span></div>
+
+      <div class="topbarRight">
+        <div class="progressWrap" aria-label="Voortgang">
+          <div class="progressLabel"><span id="progressPct">0%</span> ingevuld</div>
+          <div class="progressTrack" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progressFill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <button class="ghostBtn" type="button" id="toggleCompact" aria-pressed="false">Compact</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
       <h1>Help mij de lessen zo te maken dat ze voor jou werken.</h1>
-      <p class="sub">
-        Klik op kaarten, voeg (optioneel) korte toelichting toe, en verstuur.
-        Geen account nodig.
+      <p class="lead">
+        Klik op kaarten, kies opties, en vul (optioneel) korte toelichting in. Dit is geen test — het is inspiratie.
+        Je antwoorden gebruik ik alleen om de lessen en het huiswerk beter te maken.
       </p>
-    </header>
-
-    <!-- Netlify Forms: submissions appear in Netlify dashboard (no paid plan required for basic use). -->
-    <form id="intakeForm" action="thanks/" method="GET" class="card form">
-<section class="section">
-        <div class="section-head">
-          <h2>Basis</h2>
-          <p class="hint">Alleen om antwoorden te kunnen herkennen (mag ook leeg).</p>
-        </div>
-
-        <div class="grid two">
-          <label class="field">
-            <span>Naam (optioneel)</span>
-            <input type="text" name="naam" autocomplete="name" placeholder="bijv. Marieke" />
-          </label>
-
-          <label class="field">
-            <span>Waar wil je vooral op focussen? (optioneel)</span>
-            <input type="text" name="focus" placeholder="bijv. meer spreken, beter luisteren, grammatica..." />
-          </label>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-head">
-          <h2>Keuzekaarten</h2>
-          <p class="hint">V1 is technisch: inhoud pas je straks zelf aan in <code>script.js</code>.</p>
-        </div>
-
-        <div id="blocks"></div>
-
-        <!-- Hidden payloads we populate with JS -->
-        <input type="hidden" name="selections_json" id="selections_json" />
-        <input type="hidden" name="meta_json" id="meta_json" />
-      </section>
-
-      <section class="section">
-        <div class="section-head">
-          
-<section class="card section" id="goalBuilder">
-  <div class="sectionHead">
-    <h2>Jouw Spaans in één mini-scène</h2>
-    <div class="hint">Kies drie bouwstenen en lees je doelzin hardop. Dat alleen al helpt.</div>
-  </div>
-
-  <div class="builder">
-    <div class="builderRow">
-      <label for="gb_where">Waar?</label>
-      <select id="gb_where">
-        <option value="op vakantie in Spanje">op vakantie in Spanje</option>
-        <option value="in een restaurant">in een restaurant</option>
-        <option value="bij de dokter / apotheek">bij de dokter / apotheek</option>
-        <option value="op het station / in OV">op het station / in OV</option>
-        <option value="met Spaanstalige collega’s">met Spaanstalige collega’s</option>
-        <option value="met vrienden / familie">met vrienden / familie</option>
-      </select>
-    </div>
-
-    <div class="builderRow">
-      <label for="gb_action">Wat wil je daar kunnen?</label>
-      <select id="gb_action">
-        <option value="een gesprek beginnen en gaande houden">een gesprek beginnen en gaande houden</option>
-        <option value="vragen stellen en antwoorden begrijpen">vragen stellen en antwoorden begrijpen</option>
-        <option value="iets regelen zonder stress (hotel, reservering, ticket)">iets regelen zonder stress (hotel, reservering, ticket)</option>
-        <option value="een probleem uitleggen (klacht, kapot, ziek)">een probleem uitleggen (klacht, kapot, ziek)</option>
-        <option value="grappen/snacks van de taal mee pakken (sfeer)">grappen/snacks van de taal mee pakken (sfeer)</option>
-      </select>
-    </div>
-
-    <div class="builderRow">
-      <label for="gb_style">Hoe?</label>
-      <select id="gb_style">
-        <option value="liefst vooral pratend, met zachte correctie">liefst vooral pratend, met zachte correctie</option>
-        <option value="met veel luisteren en naspreken (ritme/uitspraak)">met veel luisteren en naspreken (ritme/uitspraak)</option>
-        <option value="met duidelijke grammatica op het juiste moment">met duidelijke grammatica op het juiste moment</option>
-        <option value="met korte schrijfopdrachten om te onthouden">met korte schrijfopdrachten om te onthouden</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="previewBox" aria-live="polite">
-    <div class="previewLabel">Jouw doelzin</div>
-    <div class="previewSentence" id="gb_preview"></div>
-  </div>
-
-  <div class="smallNote">Tip: je hoeft dit niet “perfect” te kiezen. Het is bedoeld om mij richting te geven.</div>
-</section>
-
-  <h2>Jouw jaar in één zin</h2>
-          <p class="hint">Korte vrije tekst (optioneel).</p>
-        </div>
-        <label class="field">
-          <textarea name="year_one_liner" rows="3" placeholder="Als deze cursus geslaagd is, dan..."></textarea>
-        </label>
-      </section>
-
-      <footer class="footer">
-        <div class="fineprint">
-          <span class="dot"></span>
-          <span>Je antwoorden worden alleen gebruikt om de lessen te verbeteren.</span>
-        </div>
-        <button type="submit" class="btn" id="submitBtn">Verstuur</button>
-      </footer>
-
-      <!-- Optional redirect after submit -->
-</form>
-
-    <section class="tips">
-      <details>
-        <summary>Technisch: waar komen de antwoorden terecht?</summary>
-        <div class="details">
-          <p>
-            V1.3 draait op <strong>GitHub Pages</strong> (statisch). Een echte server-side formulieropslag is er dus nog niet.
-            Na <em>Verstuur</em> word je doorgestuurd naar de bedankpagina.
-          </p>
-          <ul>
-            <li>Voor testdoeleinden wordt je laatste inzending lokaal opgeslagen in je browser (<code>localStorage</code>).</li>
-            <li>In deze versie worden inzendingen opgeslagen in Google Sheets via een klein endpoint.</li>
-          </ul>
-        </div>
-</details>
+      <div class="heroRow">
+        <div class="pill"><span class="dot"></span><span>Geen account nodig · duurt ± 6–10 min</span></div>
+        <div class="pill"><span class="dot2"></span><span>Alles mag leeg blijven — klikken is al genoeg</span></div>
+      </div>
     </section>
+
+    <form id="intakeForm" class="stack" autocomplete="on">
+      <input type="hidden" name="selected_json" id="selected_json" value="{}" />
+      <input type="hidden" name="meta_json" id="meta_json" value="{}" />
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Basis</h2>
+          <div class="hint">Alleen om antwoorden te kunnen herkennen (mag ook leeg).</div>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="name">Naam (optioneel)</label>
+            <input id="name" name="name" type="text" placeholder="bijv. Marieke" />
+          </div>
+          <div class="field">
+            <label for="focus">Waar wil je vooral op focussen? (optioneel)</label>
+            <input id="focus" name="focus" type="text" placeholder="bijv. meer spreken, beter luisteren, grammatica..." />
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Jouw Spaans in het echt</h2>
+          <div class="hint">Kies wat herkenbaar is. Meerdere opties kan.</div>
+        </div>
+
+        <div class="subHead">Situaties</div>
+        <div class="chipGrid" data-chip-group="situations"></div>
+
+        <div class="subHead">Thema’s waar je over wilt kunnen praten</div>
+        <div class="chipGrid" data-chip-group="themes"></div>
+
+        <div class="subHead">In één zin (optioneel)</div>
+        <textarea class="bigText" id="goalSentence" name="goalSentence" placeholder="Als deze cursus geslaagd is, dan…"></textarea>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Wat wil je trainen?</h2>
+          <div class="hint">Kies je top-prioriteiten. Dit stuurt mijn lesmix.</div>
+        </div>
+
+        <div class="subHead">Taalonderdelen</div>
+        <div class="tileGrid" data-tile-group="skills"></div>
+
+        <div class="subHead">Wat vind jij lastig?</div>
+        <div class="tileGrid" data-tile-group="painPoints"></div>
+
+        <div class="grid2">
+          <div class="field">
+            <label for="confidence">Spreekdurf nu (0 = stil, 10 = praten)</label>
+            <input id="confidence" name="confidence" type="range" min="0" max="10" value="5" />
+            <div class="rangeMeta"><span>0</span><span id="confidenceVal">5</span><span>10</span></div>
+          </div>
+          <div class="field">
+            <label for="homeworkTime">Huiswerktijd per week (realistisch)</label>
+            <select id="homeworkTime" name="homeworkTime">
+              <option value="">Kies…</option>
+              <option>0–5 min</option>
+              <option>5–10 min</option>
+              <option>10–20 min</option>
+              <option>20–30 min</option>
+              <option>30–45 min</option>
+              <option>45–60 min</option>
+              <option>60+ min</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Grammatica & uitspraak</h2>
+          <div class="hint">Ik kan dit light houden of juist expliciet — jij bepaalt.</div>
+        </div>
+
+        <div class="subHead">Grammatica die je (meer) wilt</div>
+        <div class="chipGrid" data-chip-group="grammar"></div>
+
+        <div class="subHead">Uitspraak / luisteren</div>
+        <div class="tileGrid" data-tile-group="pronunciation"></div>
+
+        <div class="subHead">Correctiestijl</div>
+        <div class="choiceGrid" data-choice-group="correctionStyle"></div>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Werkvormen die jij leuk vindt</h2>
+          <div class="hint">Dit geeft mij direct oefen-inspiratie.</div>
+        </div>
+
+        <div class="subHead">In de les</div>
+        <div class="tileGrid" data-tile-group="inClass"></div>
+
+        <div class="subHead">Als huiswerk</div>
+        <div class="tileGrid" data-tile-group="homeworkFormats"></div>
+
+        <div class="subHead">Bronnen die je wél zou gebruiken</div>
+        <div class="chipGrid" data-chip-group="sources"></div>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Terugblik</h2>
+          <div class="hint">Hier zit goud voor mij. Liefst concreet.</div>
+        </div>
+
+        <div class="subHead">Wat vond je goed aan de eerdere lessen?</div>
+        <div class="tileGrid" data-tile-group="workedWell"></div>
+
+        <div class="subHead">Wat werkte minder / wil je anders?</div>
+        <div class="tileGrid" data-tile-group="change"></div>
+
+        <div class="grid2">
+          <div class="field">
+            <label for="bestMoment">Concreet voorbeeld: wat was een moment dat je dacht “dit hielp echt”?</label>
+            <textarea id="bestMoment" name="bestMoment" placeholder="Bijv. dat rollenspel in het restaurant, omdat…"></textarea>
+          </div>
+          <div class="field">
+            <label for="homeworkFeedback">Huiswerk: wat vond je fijn en wat niet?</label>
+            <textarea id="homeworkFeedback" name="homeworkFeedback" placeholder="Bijv. korte opdrachten zijn top, maar…"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Laatste ideeën</h2>
+          <div class="hint">Vrije ruimte voor alles wat nog mist.</div>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="wishList">Welke 3 dingen wil je dit jaar kunnen in het Spaans?</label>
+            <textarea id="wishList" name="wishList" placeholder="1) … 2) … 3) …"></textarea>
+          </div>
+          <div class="field">
+            <label for="surpriseMe">Wat zou je een leuke verrassing vinden in de lessen?</label>
+            <textarea id="surpriseMe" name="surpriseMe" placeholder="Bijv. mini-quiz, mysteriespel, reis-simulatie…"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card footerCard">
+        <div class="footerRow">
+          <div class="privacy">
+            <span class="dot3"></span>
+            <span>Je antwoorden worden alleen gebruikt om de lessen te verbeteren.</span>
+          </div>
+          <div class="actions">
+            <button type="button" class="secondary" id="copyBtn">Kopieer antwoord als tekst</button>
+            <button type="submit" id="submitBtn">Verstuur</button>
+          </div>
+        </div>
+
+        <details class="tech">
+          <summary>Technisch: waar gaan de antwoorden heen?</summary>
+          <div class="techBody">
+            <p>
+              Dit formulier stuurt je antwoorden naar een Google Spreadsheet via een Google Apps Script (Drive).
+              Als versturen faalt, kun je altijd “Kopieer antwoord als tekst” gebruiken en dat naar mij sturen.
+            </p>
+            <p class="mono">
+              Endpoint: <span id="endpointLabel">(ingesteld in script.js)</span><br/>
+              Intake key: <span id="keyLabel">(ingesteld in script.js)</span>
+            </p>
+          </div>
+        </details>
+
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+      </section>
+    </form>
   </main>
 
-  <script src="script.js?v=1.6.2" defer></script>
+  <script src="script.js?v=2.0"></script>
 </body>
 </html>
