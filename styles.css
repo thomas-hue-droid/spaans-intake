@@ -167,7 +167,21 @@ h1{
   gap: 14px;
   margin-bottom: 12px;
 }
+
+.cardHeadLeft{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
 .cardHead h2{ margin:0; font-size: 22px; letter-spacing: -0.01em; }
+
+.cardSub{
+  font-size: 13px;
+  color: rgba(18,22,40,.70);
+  line-height: 1.35;
+  max-width: 70ch;
+}
 
 .hint{
   color: var(--muted);
@@ -181,6 +195,13 @@ h1{
   font-weight: 900;
   font-size: 14px;
   color: rgba(18,22,40,.76);
+}
+
+.subHint{
+  margin-top: 6px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: rgba(18,22,40,.62);
 }
 
 .grid2{
@@ -197,6 +218,17 @@ h1{
 
 .field{ display:flex; flex-direction:column; gap:8px; }
 label{ font-size: 13px; color: var(--muted); }
+
+.fieldQuestion{
+  margin-top: 10px;
+}
+
+.fieldQuestion .qLabel{
+  color: var(--text);
+  font-weight: 950;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
 
 input[type="text"], textarea, select{
   width:100%;
@@ -355,3 +387,25 @@ summary{ cursor:pointer; user-select:none; color: rgba(18,22,40,.74); }
 
 body.compact .tile{ min-height: 120px; }
 body.compact .tile.selected .inline{ max-height: 220px; }
+
+/* V2.2 micro helpers */
+.microHint{
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px dashed rgba(18,22,40,.18);
+  background: rgba(255,255,255,.72);
+  color: rgba(18,22,40,.72);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.microHint.show{
+  display: block;
+}
+
+.microHint strong{
+  color: rgba(18,22,40,.86);
+  font-weight: 950;
+}

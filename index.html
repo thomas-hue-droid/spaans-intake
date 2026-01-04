@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lessen Spaans · Intake (V2)</title>
+  <title>Lessen Spaans · Intake (V2.2)</title>
   <meta name="description" content="Intake voor Spaanse lessen — geen account nodig." />
-  <link rel="stylesheet" href="styles.css?v=2.0" />
+  <link rel="stylesheet" href="styles.css?v=2.2" />
 </head>
 <body>
   <header class="topbar">
     <div class="container">
-      <div class="badge">Lessen Spaans · Intake <span class="muted">(V2)</span></div>
+      <div class="badge">Lessen Spaans · Intake <span class="muted">(V2.2)</span></div>
 
       <div class="topbarRight">
         <div class="progressWrap" aria-label="Voortgang">
@@ -42,11 +42,16 @@
       <input type="hidden" name="selected_json" id="selected_json" value="{}" />
       <input type="hidden" name="meta_json" id="meta_json" value="{}" />
 
+      <!-- BASIS -->
       <section class="card">
         <div class="cardHead">
-          <h2>Basis</h2>
+          <div class="cardHeadLeft">
+            <h2>Basis</h2>
+            <div class="cardSub">Vul dit in als je wilt (optioneel).</div>
+          </div>
           <div class="hint">Alleen om antwoorden te kunnen herkennen (mag ook leeg).</div>
         </div>
+
         <div class="grid2">
           <div class="field">
             <label for="name">Naam (optioneel)</label>
@@ -59,33 +64,53 @@
         </div>
       </section>
 
+      <!-- JOUW SPAANS IN HET ECHT -->
       <section class="card">
         <div class="cardHead">
-          <h2>Jouw Spaans in het echt</h2>
-          <div class="hint">Kies wat herkenbaar is. Meerdere opties kan.</div>
+          <div class="cardHeadLeft">
+            <h2>Jouw Spaans in het echt</h2>
+            <div class="cardSub">Klik aan wat bij je past (meerdere opties kan).</div>
+          </div>
+          <div class="hint">Dit helpt mij om scenario’s te kiezen die je écht gebruikt.</div>
         </div>
 
         <div class="subHead">Situaties</div>
+        <div class="subHint">Klik aan (meerdere mogelijk).</div>
         <div class="chipGrid" data-chip-group="situations"></div>
+        <div class="microHint" data-helper="situations" aria-live="polite"></div>
 
         <div class="subHead">Thema’s waar je over wilt kunnen praten</div>
+        <div class="subHint">Klik aan (meerdere mogelijk).</div>
         <div class="chipGrid" data-chip-group="themes"></div>
+        <div class="microHint" data-helper="themes" aria-live="polite"></div>
 
-        <div class="subHead">In één zin (optioneel)</div>
-        <textarea class="bigText" id="goalSentence" name="goalSentence" placeholder="Als deze cursus geslaagd is, dan…"></textarea>
+        <div class="subHead">In één zin</div>
+        <div class="subHint">Optioneel: dit wordt jouw “kompas” voor het jaar.</div>
+        <div class="field fieldQuestion">
+          <label class="qLabel" for="goalSentence">Als deze cursus geslaagd is, dan…</label>
+          <textarea class="bigText" id="goalSentence" name="goalSentence" placeholder="Bijv. ‘dan kan ik in een restaurant ontspannen bestellen en doorvragen’"></textarea>
+        </div>
       </section>
 
+      <!-- WAT WIL JE TRAINEN -->
       <section class="card">
         <div class="cardHead">
-          <h2>Wat wil je trainen?</h2>
-          <div class="hint">Kies je top-prioriteiten. Dit stuurt mijn lesmix.</div>
+          <div class="cardHeadLeft">
+            <h2>Wat wil je trainen?</h2>
+            <div class="cardSub">Klik aan en licht toe (optioneel). Kies wat je het belangrijkst vindt.</div>
+          </div>
+          <div class="hint">Dit stuurt mijn lesmix (spreken/luisteren/grammatica/etc.).</div>
         </div>
 
         <div class="subHead">Taalonderdelen</div>
+        <div class="subHint">Klik aan. (Optioneel: licht toe in het tekstvak in de kaart.)</div>
         <div class="tileGrid" data-tile-group="skills"></div>
+        <div class="microHint" data-helper="skills" aria-live="polite"></div>
 
         <div class="subHead">Wat vind jij lastig?</div>
+        <div class="subHint">Klik aan. (Optioneel: beschrijf een typisch moment.)</div>
         <div class="tileGrid" data-tile-group="painPoints"></div>
+        <div class="microHint" data-helper="painPoints" aria-live="polite"></div>
 
         <div class="grid2">
           <div class="field">
@@ -109,79 +134,113 @@
         </div>
       </section>
 
+      <!-- GRAMMATICA & UITSPRAAK -->
       <section class="card">
         <div class="cardHead">
-          <h2>Grammatica & uitspraak</h2>
+          <div class="cardHeadLeft">
+            <h2>Grammatica & uitspraak</h2>
+            <div class="cardSub">Klik aan wat je wilt oefenen. Bij correctiestijl: kies één optie.</div>
+          </div>
           <div class="hint">Ik kan dit light houden of juist expliciet — jij bepaalt.</div>
         </div>
 
         <div class="subHead">Grammatica die je (meer) wilt</div>
+        <div class="subHint">Klik aan (meerdere mogelijk).</div>
         <div class="chipGrid" data-chip-group="grammar"></div>
+        <div class="microHint" data-helper="grammar" aria-live="polite"></div>
 
         <div class="subHead">Uitspraak / luisteren</div>
+        <div class="subHint">Klik aan. (Optioneel: licht toe in de kaart.)</div>
         <div class="tileGrid" data-tile-group="pronunciation"></div>
+        <div class="microHint" data-helper="pronunciation" aria-live="polite"></div>
 
         <div class="subHead">Correctiestijl</div>
+        <div class="subHint">Kies één optie.</div>
         <div class="choiceGrid" data-choice-group="correctionStyle"></div>
+        <div class="microHint" data-helper="correctionStyle" aria-live="polite"></div>
       </section>
 
+      <!-- WERKVORMEN -->
       <section class="card">
         <div class="cardHead">
-          <h2>Werkvormen die jij leuk vindt</h2>
+          <div class="cardHeadLeft">
+            <h2>Werkvormen die jij leuk vindt</h2>
+            <div class="cardSub">Klik aan wat jou motiveert (optioneel toelichten).</div>
+          </div>
           <div class="hint">Dit geeft mij direct oefen-inspiratie.</div>
         </div>
 
         <div class="subHead">In de les</div>
+        <div class="subHint">Klik aan. (Optioneel: licht toe in de kaart.)</div>
         <div class="tileGrid" data-tile-group="inClass"></div>
+        <div class="microHint" data-helper="inClass" aria-live="polite"></div>
 
         <div class="subHead">Als huiswerk</div>
+        <div class="subHint">Klik aan. (Optioneel: licht toe in de kaart.)</div>
         <div class="tileGrid" data-tile-group="homeworkFormats"></div>
+        <div class="microHint" data-helper="homeworkFormats" aria-live="polite"></div>
 
         <div class="subHead">Bronnen die je wél zou gebruiken</div>
+        <div class="subHint">Klik aan (meerdere mogelijk).</div>
         <div class="chipGrid" data-chip-group="sources"></div>
+        <div class="microHint" data-helper="sources" aria-live="polite"></div>
       </section>
 
+      <!-- TERUGBLIK -->
       <section class="card">
         <div class="cardHead">
-          <h2>Terugblik</h2>
-          <div class="hint">Hier zit goud voor mij. Liefst concreet.</div>
+          <div class="cardHeadLeft">
+            <h2>Terugblik</h2>
+            <div class="cardSub">Klik aan en schrijf 1 concreet voorbeeld (liefst).</div>
+          </div>
+          <div class="hint">Hier zit goud voor mij. Hoe concreter, hoe beter.</div>
         </div>
 
         <div class="subHead">Wat vond je goed aan de eerdere lessen?</div>
+        <div class="subHint">Klik aan. (Optioneel: licht toe in de kaart.)</div>
         <div class="tileGrid" data-tile-group="workedWell"></div>
+        <div class="microHint" data-helper="workedWell" aria-live="polite"></div>
 
         <div class="subHead">Wat werkte minder / wil je anders?</div>
+        <div class="subHint">Klik aan. (Optioneel: licht toe in de kaart.)</div>
         <div class="tileGrid" data-tile-group="change"></div>
+        <div class="microHint" data-helper="change" aria-live="polite"></div>
 
         <div class="grid2">
-          <div class="field">
-            <label for="bestMoment">Concreet voorbeeld: wat was een moment dat je dacht “dit hielp echt”?</label>
+          <div class="field fieldQuestion">
+            <label class="qLabel" for="bestMoment">Concreet voorbeeld: wanneer dacht je “dit hielp echt”?</label>
             <textarea id="bestMoment" name="bestMoment" placeholder="Bijv. dat rollenspel in het restaurant, omdat…"></textarea>
           </div>
-          <div class="field">
-            <label for="homeworkFeedback">Huiswerk: wat vond je fijn en wat niet?</label>
+          <div class="field fieldQuestion">
+            <label class="qLabel" for="homeworkFeedback">Huiswerk: wat vond je fijn en wat niet?</label>
             <textarea id="homeworkFeedback" name="homeworkFeedback" placeholder="Bijv. korte opdrachten zijn top, maar…"></textarea>
           </div>
         </div>
       </section>
 
+      <!-- LAATSTE IDEEËN -->
       <section class="card">
         <div class="cardHead">
-          <h2>Laatste ideeën</h2>
-          <div class="hint">Vrije ruimte voor alles wat nog mist.</div>
+          <div class="cardHeadLeft">
+            <h2>Laatste ideeën</h2>
+            <div class="cardSub">Schrijf wat je nog mist — alles mag kort.</div>
+          </div>
+          <div class="hint">Vrije ruimte voor alles wat nog niet langs kwam.</div>
         </div>
+
         <div class="grid2">
-          <div class="field">
-            <label for="wishList">Welke 3 dingen wil je dit jaar kunnen in het Spaans?</label>
+          <div class="field fieldQuestion">
+            <label class="qLabel" for="wishList">Welke 3 dingen wil je dit jaar kunnen in het Spaans?</label>
             <textarea id="wishList" name="wishList" placeholder="1) … 2) … 3) …"></textarea>
           </div>
-          <div class="field">
-            <label for="surpriseMe">Wat zou je een leuke verrassing vinden in de lessen?</label>
+          <div class="field fieldQuestion">
+            <label class="qLabel" for="surpriseMe">Wat zou je een leuke verrassing vinden in de lessen?</label>
             <textarea id="surpriseMe" name="surpriseMe" placeholder="Bijv. mini-quiz, mysteriespel, reis-simulatie…"></textarea>
           </div>
         </div>
       </section>
 
+      <!-- FOOTER / SUBMIT -->
       <section class="card footerCard">
         <div class="footerRow">
           <div class="privacy">
@@ -213,6 +272,6 @@
     </form>
   </main>
 
-  <script src="script.js?v=2.0"></script>
+  <script src="script.js?v=2.2"></script>
 </body>
 </html>

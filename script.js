@@ -1,5 +1,6 @@
-// Lessen Spaans Intake — V2.0
-// ✅ Google Drive / Sheets koppeling behouden
+// Lessen Spaans Intake — V2.2
+// ✅ GitHub Pages friendly + Google Apps Script endpoint (Drive/Sheets)
+// ✅ no-cors + text/plain om CORS-problemen te vermijden
 
 const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbzDRcO9twI8QuzlVNAqS8YLFzBvfdk4yYEf9mLL_q211o-FS7MFtoY9g8W7ti50sU0/exec";
 const INTAKE_KEY = "dolfijn-rodeo-Spanje";
@@ -103,11 +104,68 @@ const DATA = {
   ],
 };
 
+// ---------- V2.2 micro helpers ----------
+const MICRO_HINTS = {
+  situations: { title:"Tip", text:"Kies 2–4 situaties. Als je wilt: typ één zin in het grote veld hieronder die je daar graag zou kunnen zeggen." },
+  themes: { title:"Tip", text:"Kies thema’s waar je echt over wilt praten. Hoe concreter, hoe beter." },
+  skills: { title:"Tip", text:"Licht 1 kaart toe met een voorbeeld: wat wil je straks makkelijker kunnen zeggen?" },
+  painPoints: { title:"Tip", text:"Als je één lastigheid kiest: beschrijf een typisch moment waarop dit gebeurt." },
+  grammar: { title:"Tip", text:"Kies wat je vaker en rustiger uitgelegd wilt krijgen (korte regel + meteen oefenen)." },
+  pronunciation: { title:"Tip", text:"Als je wilt: noteer één woord waarin je vaak twijfelt over uitspraak of klemtoon." },
+  correctionStyle: { title:"Tip", text:"Ik pas mijn correcties hierop aan. Als je twijfelt: ‘Mix’ is altijd oké." },
+  inClass: { title:"Tip", text:"Kies 2 werkvormen die jou het meest laten praten zonder stress." },
+  homeworkFormats: { title:"Tip", text:"Kies wat haalbaar is in jouw week. 10 minuten die je wél doet > 60 minuten die je laat liggen." },
+  sources: { title:"Tip", text:"Bronnen zijn optioneel. Als je ‘geen’ kiest, hou ik alles binnen de les/huiswerk dat ik zelf maak." },
+  workedWell: { title:"Tip", text:"Als je één ding kiest: wat maakte het precies effectief voor jou?" },
+  change: { title:"Tip", text:"Kies wat het meeste verschil maakt. We kunnen tempo, mix en uitlegstijl echt sturen." },
+};
+
 const state = { chips:new Map(), tiles:new Map(), choices:new Map() };
 
 function esc(s){ return String(s??"").replace(/[&<>"']/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
 function ensureSet(map,k){ if(!map.has(k)) map.set(k,new Set()); return map.get(k); }
 function ensureMap(map,k){ if(!map.has(k)) map.set(k,new Map()); return map.get(k); }
+
+// ---- micro hint helpers ----
+function setMicroHint(key, visible) {
+  const el = document.querySelector(`.microHint[data-helper="${key}"]`);
+  if(!el) return;
+
+  if(!visible){
+    el.classList.remove("show");
+    el.innerHTML = "";
+    return;
+  }
+
+  const h = MICRO_HINTS[key];
+  if(!h) return;
+
+  el.innerHTML = `<strong>${esc(h.title)}:</strong> ${esc(h.text)}`;
+  el.classList.add("show");
+}
+
+function updateMicroHints(){
+  const sel = selectedJson();
+
+  const chipsVisible = (k) => (sel.chips?.[k]?.length || 0) > 0;
+  const tilesVisible = (k) => (sel.tiles?.[k]?.length || 0) > 0;
+  const choiceVisible = (k) => Boolean(sel.choices?.[k]);
+
+  setMicroHint("situations", chipsVisible("situations"));
+  setMicroHint("themes", chipsVisible("themes"));
+  setMicroHint("grammar", chipsVisible("grammar"));
+  setMicroHint("sources", chipsVisible("sources"));
+
+  setMicroHint("skills", tilesVisible("skills"));
+  setMicroHint("painPoints", tilesVisible("painPoints"));
+  setMicroHint("pronunciation", tilesVisible("pronunciation"));
+  setMicroHint("inClass", tilesVisible("inClass"));
+  setMicroHint("homeworkFormats", tilesVisible("homeworkFormats"));
+  setMicroHint("workedWell", tilesVisible("workedWell"));
+  setMicroHint("change", tilesVisible("change"));
+
+  setMicroHint("correctionStyle", choiceVisible("correctionStyle"));
+}
 
 function renderChips(group, items){
   const host = document.querySelector(`[data-chip-group="${group}"]`);
@@ -132,7 +190,7 @@ function renderChips(group, items){
     set.has(id) ? set.delete(id) : set.add(id);
     chip.classList.toggle("selected");
     chip.setAttribute("aria-pressed", chip.classList.contains("selected")?"true":"false");
-    sync(); progress();
+    sync(); progress(); updateMicroHints();
   });
 
   host.addEventListener("keydown",(e)=>{
@@ -180,7 +238,7 @@ function renderTiles(group, items){
       const ta = tile.querySelector("textarea.note");
       if(ta) ta.value="";
     }
-    sync(); progress();
+    sync(); progress(); updateMicroHints();
   });
 
   host.addEventListener("input",(e)=>{
@@ -190,7 +248,7 @@ function renderTiles(group, items){
     const map = ensureMap(state.tiles, group);
     if(!map.has(id)) map.set(id,"");
     map.set(id, ta.value);
-    sync(); progress();
+    sync(); progress(); updateMicroHints();
   });
 
   host.addEventListener("keydown",(e)=>{
@@ -222,7 +280,7 @@ function renderChoices(group, items){
   host.addEventListener("change",(e)=>{
     const r = e.target.closest('input[type="radio"]'); if(!r) return;
     state.choices.set(group, r.value);
-    sync(); progress();
+    sync(); progress(); updateMicroHints();
   });
 }
 
@@ -235,7 +293,7 @@ function selectedJson(){
 }
 
 function metaJson(){
-  return { ua:navigator.userAgent, ts:new Date().toISOString(), version:"v2.0", page:location.href };
+  return { ua:navigator.userAgent, ts:new Date().toISOString(), version:"v2.2", page:location.href };
 }
 
 function sync(){
@@ -319,20 +377,15 @@ function payloadFromForm(){
 }
 
 async function send(payload){
-  // ✅ Simple request (geen preflight)
-  // ✅ no-cors zodat GitHub Pages -> Apps Script niet geblokkeerd wordt
+  // ✅ Simple request (geen preflight) + ✅ no-cors
   const body = JSON.stringify({ intake_key: INTAKE_KEY, payload });
-
   await fetch(ENDPOINT_URL, {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body
   });
-
-  // In no-cors krijg je een "opaque" response die je niet mag lezen.
-  // Als fetch geen error gooit, is het request verstuurd.
-  return { ok: true };
+  return { ok:true };
 }
 
 function init(){
@@ -353,11 +406,11 @@ function init(){
 
   const conf = document.getElementById("confidence");
   const confVal = document.getElementById("confidenceVal");
-  conf.addEventListener("input",()=>{ confVal.textContent=conf.value; sync(); progress(); });
+  conf.addEventListener("input",()=>{ confVal.textContent=conf.value; sync(); progress(); updateMicroHints(); });
 
   const form = document.getElementById("intakeForm");
-  form.addEventListener("input",()=>{ sync(); progress(); }, {passive:true});
-  form.addEventListener("change",()=>{ sync(); progress(); }, {passive:true});
+  form.addEventListener("input",()=>{ sync(); progress(); updateMicroHints(); }, {passive:true});
+  form.addEventListener("change",()=>{ sync(); progress(); updateMicroHints(); }, {passive:true});
 
   document.getElementById("toggleCompact").addEventListener("click",()=>{
     const on = document.body.classList.toggle("compact");
@@ -393,6 +446,6 @@ function init(){
     }
   });
 
-  sync(); progress();
+  sync(); progress(); updateMicroHints();
 }
 document.addEventListener("DOMContentLoaded", init);
