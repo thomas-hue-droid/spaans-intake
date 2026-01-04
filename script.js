@@ -319,17 +319,20 @@ function payloadFromForm(){
 }
 
 async function send(payload){
-  const res = await fetch(ENDPOINT_URL,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ intake_key: INTAKE_KEY, payload }),
-    redirect:"follow"
+  // ✅ Simple request (geen preflight)
+  // ✅ no-cors zodat GitHub Pages -> Apps Script niet geblokkeerd wordt
+  const body = JSON.stringify({ intake_key: INTAKE_KEY, payload });
+
+  await fetch(ENDPOINT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body
   });
-  if(!res.ok){
-    const t = await res.text().catch(()=> "");
-    throw new Error(`HTTP ${res.status} — ${t.slice(0,200)}`);
-  }
-  return res.json().catch(()=> ({}));
+
+  // In no-cors krijg je een "opaque" response die je niet mag lezen.
+  // Als fetch geen error gooit, is het request verstuurd.
+  return { ok: true };
 }
 
 function init(){
